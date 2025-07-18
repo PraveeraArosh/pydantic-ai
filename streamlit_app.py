@@ -51,4 +51,3 @@ if st.button("Analyze Recipe"):
 
 # Footer
 st.markdown("---")
-st.markdown("Built with Streamlit | Powered by OpenAI")
