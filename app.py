@@ -6,10 +6,8 @@ import asyncio
 from dotenv import load_dotenv
 from openai import OpenAI
 
-from nutrition_info import NutritionalInfo
 from recipe_analysis import RecipeAnalysis
-
-from recipe_analyzer import RecipeAnalyzer
+from nutrition_info import NutritionalInfo
 
 load_dotenv()
 
@@ -23,7 +21,6 @@ def initialize_openai_client():
 
 openai_client = initialize_openai_client()
 
-
 recipe_agent = Agent(
     model="gpt-3.5-turbo",
     result_type=RecipeAnalysis,
@@ -36,6 +33,57 @@ recipe_agent = Agent(
     """,
 )
 
+class RecipeAnalyzer:
+    """Main class for analyzing recipes using Pydantic AI"""
+    
+    def __init__(self):
+        self.agent = recipe_agent
+    
+    async def analyze_recipe(self, recipe_text: str) -> RecipeAnalysis:
+        """
+        Analyze a recipe and return structured data
+        
+        Args:
+            recipe_text: The recipe text to analyze
+            
+        Returns:
+            RecipeAnalysis: Structured analysis of the recipe
+        """
+        try:
+            result = await self.agent.run(f"Analyze this recipe: {recipe_text}")
+            return result.data
+        except Exception as e:
+            raise Exception(f"Error analyzing recipe: {str(e)}")
+    
+    def format_analysis(self, analysis: RecipeAnalysis) -> str:
+        """Format the analysis for display"""
+        return f"""
+🍳 RECIPE ANALYSIS
+==================
+
+📊 Basic Info:
+• Difficulty: {analysis.difficulty_level}
+• Prep Time: {analysis.prep_time_minutes} minutes
+• Cook Time: {analysis.cook_time_minutes} minutes
+• Servings: {analysis.servings}
+• Cuisine: {analysis.cuisine_type}
+• Health Score: {analysis.healthiness_score}/10
+
+🏷️ Dietary Tags: {', '.join(analysis.dietary_tags)}
+
+📈 Nutrition (per serving):
+• Calories: {analysis.nutrition.calories}
+• Protein: {analysis.nutrition.protein_g}g
+• Carbs: {analysis.nutrition.carbs_g}g
+• Fat: {analysis.nutrition.fat_g}g
+• Fiber: {analysis.nutrition.fiber_g}g
+
+❓ Might be missing: {', '.join(analysis.missing_ingredients)}
+
+💡 Cooking Tips:
+{chr(10).join(f'• {tip}' for tip in analysis.cooking_tips)}
+"""
+    
 async def main():
     # Sample recipe for demonstration
     sample_recipe = """
@@ -98,5 +146,6 @@ def get_time_category(analysis: RecipeAnalysis) -> str:
     else:
         return "Special occasion"
     
+
 if __name__ == "__main__":
     asyncio.run(main())

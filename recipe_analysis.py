@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
-from pydantic_ai import Agent
 from typing import List, Optional
+
 from nutrition_info import NutritionalInfo
 
 class RecipeAnalysis(BaseModel):
