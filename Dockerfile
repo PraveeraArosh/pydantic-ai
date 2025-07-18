@@ -5,7 +5,7 @@ FROM python:3.10-slim
 WORKDIR /app
 
 # Copy application files
-COPY app.py recipe_analyzer.py recipe_analysis.py nutrition_info.py streamlit_app.py ./
+COPY app.py recipe_analysis.py nutrition_info.py streamlit_app.py ./
 COPY requirements.txt ./
 COPY .env ./
 
