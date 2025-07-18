@@ -4,7 +4,7 @@ from app import RecipeAnalyzer, recipe_to_shopping_list, is_healthy_recipe, get_
 from recipe_analysis import RecipeAnalysis
 
 # Streamlit app configuration
-st.set_page_config(page_title="Recipe Analyzer", page_icon="🍳", layout="wide")
+st.set_page_config(page_title="Recipe Analyzer", page_icon="🍳", layout="centered")
 
 # Title and description
 st.title("🍽️ Recipe Analyzer")
